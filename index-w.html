@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Selector Game</title>
+    <style>* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.instructions {
+    background: rgba(255,255,255,0.15);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#first, #second {
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 12px;
+    margin: auto;
+    width: fit-content;
+}
+
+#words-first {
+    display: flex;
+    gap: 15px;
+}
+
+.row {
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.letters, .a {
+   display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.letters div, .a div {
+    width: 30px;
+    height: 30px;
+    background: #1de3d9;
+    color: #000;
+    font-weight: bold;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #ffdd57;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background: #ffc107;
+}
+
+.x {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.controls {
+    margin-top: 15px;
+}
+
+#select {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.hide {
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<h1>🎯 Word Selector Game</h1>
+
+<p class="instructions">
+    Select the order of rows according to the letters of your word.
+    <br>Example: if your word is <b>CAT</b> → row order: <b>3,1,5</b>
+</p>
+
+<div id="first">
+    <div id="words-first">
+
+        <div class="row">
+            <button id="but.a">1</button>
+            <div id="copy-a" class="letters">
+                <div class="aa">A</div><div class="bb">F</div><div class="cc">K</div>
+                <div class="dd">P</div><div class="ff">U</div><div class="gg">Z</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <button id="but.b">2</button>
+            <div id="copy-b" class="letters">
+                <div class="aa">B</div><div class="bb">G</div><div class="cc">L</div>
+                <div class="dd">Q</div><div class="ff">V</div><div class="gg">.</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <button id="but.c">3</button>
+            <div id="copy-c" class="letters">
+                <div class="aa">C</div><div class="bb">H</div><div class="cc">M</div>
+                <div class="dd">R</div><div class="ff">W</div><div class="gg">.</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <button id="but.d">4</button>
+            <div id="copy-d" class="letters">
+                <div class="aa">D</div><div class="bb">I</div><div class="cc">N</div>
+                <div class="dd">S</div><div class="ff">X</div><div class="gg">.</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <button id="but.e">5</button>
+            <div id="copy-e" class="letters">
+                <div class="aa">E</div><div class="bb">J</div><div class="cc">O</div>
+                <div class="dd">T</div><div class="ff">Y</div><div class="gg">.</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="second" class="hide">
+    <div class="x">
+        <button id="ist">1</button>
+        <button id="sec">2</button>
+        <button id="thir">3</button>
+        <button id="for">4</button>
+        <button id="fiv">5</button>
+        <button id="six">6</button>
+    </div>
+
+    <div id="words"></div>
+</div>
+
+<p id="select">Your first selection:</p>
+
+<div class="controls">
+    <button id="reset-second">Reset Selection</button>
+    <button id="next">Next</button>
+    <button id="back" class="hide">Back</button>
+    <button id="reset-word" class="hide">Reset Word</button>
+    <button id="show-word" class="hide">See Your Word</button>
+</div>
+
+<script>
+    let but1=document.getElementById("but.a");
+let but2=document.getElementById("but.b");
+let but3=document.getElementById("but.c");
+let but4=document.getElementById("but.d");
+let but5=document.getElementById("but.e");
+
+let newword=document.getElementById("words");
+
+let copya=document.getElementById("copy-a");
+let copyb=document.getElementById("copy-b");
+let copyc=document.getElementById("copy-c");
+let copyd=document.getElementById("copy-d");
+let copye=document.getElementById("copy-e");
+
+
+
+let info=document.getElementById("select");
+let row;
+
+let next=document.getElementById("next");
+let sec=document.getElementById("second");
+let first=document.getElementById("first");
+let select=document.getElementById("select");
+
+let back=document.getElementById("back");
+
+but1.addEventListener(
+    "click",()=>{
+        let el=document.createElement("div");
+        newword.append(el);
+        el.innerHTML=copya.innerHTML;
+        el.classList.add("a");
+        row="1|";
+        info.innerText=info.innerText+row;
+        
+    }
+)
+
+but2.addEventListener(
+    "click",()=>{
+        let el=document.createElement("div");
+        newword.append(el);
+        el.innerHTML=copyb.innerHTML;
+        el.classList.add("a");
+        row="2/";
+        info.innerText=info.innerText+row;
+        
+    }
+)
+
+but3.addEventListener(
+    "click",()=>{
+        let el=document.createElement("div");
+        newword.append(el);
+        el.innerHTML=copyc.innerHTML;
+        el.classList.add("a");
+        row="3/";
+        info.innerText=info.innerText+row;
+        
+    }
+)
+
+but4.addEventListener(
+    "click",()=>{
+        let el=document.createElement("div");
+        newword.append(el);
+        el.innerHTML=copyd.innerHTML;
+        el.classList.add("a");
+        row="4/";
+        info.innerText=info.innerText+row;
+        
+    }
+)
+
+but5.addEventListener(
+    "click",()=>{
+        let el=document.createElement("div");
+        newword.append(el);
+        el.innerHTML=copye.innerHTML;
+        el.classList.add("a");
+        row="5/";
+        info.innerText=info.innerText+row;
+       
+    }
+)
+
+next.addEventListener("click",()=>{
+sec.classList.remove("hide");
+first.style.display="none";
+info.innerText="Your second selection:"
+first.innerHTML="";
+next.style.display="none";
+show.classList.remove("hide");
+resetofword.classList.remove("hide");
+resetofsec.classList.add("hide");
+
+
+})
+
+
+//second phase
+
+let aa=document.getElementsByClassName("aa");
+let bb=document.getElementsByClassName("bb");
+let cc=document.getElementsByClassName("cc");
+let dd=document.getElementsByClassName("dd");
+let ff=document.getElementsByClassName("ff");
+let gg=document.getElementsByClassName("gg");
+
+let backs=document.getElementById("back");
+let butofist=document.getElementById("ist");
+let butofsec=document.getElementById("sec");
+let butofthir=document.getElementById("thir");
+let butoffor=document.getElementById("for");
+let butoffiv=document.getElementById("fiv");
+let butofsix=document.getElementById("six");
+
+let com;
+let count=-1;
+let yourword="";
+
+butofist.addEventListener("click",()=>{
+count=count+1;
+yourword=yourword+aa[count].innerText
+com="1/"
+info.innerText=info.innerText+com;
+
+})
+
+butofsec.addEventListener("click",()=>{
+    count=count+1;
+    yourword=yourword+bb[count].innerText
+    com="2/"
+info.innerText=info.innerText+com;
+    })
+
+    butofthir.addEventListener("click",()=>{
+        count=count+1;
+        yourword=yourword+cc[count].innerText
+        com="3/"
+info.innerText=info.innerText+com;
+        })
+
+        butoffor.addEventListener("click",()=>{
+            count=count+1;
+            yourword=yourword+dd[count].innerText
+            com="4/"
+            info.innerText=info.innerText+com;
+            })
+
+            butoffiv.addEventListener("click",()=>{
+                count=count+1;
+                yourword=yourword+ff[count].innerText
+                com="5/"
+                info.innerText=info.innerText+com;
+                })
+
+                butofsix.addEventListener("click",()=>{
+                    count=count+1;
+                    yourword=yourword+gg[count].innerText
+                    com="6/"
+info.innerText=info.innerText+com;
+                    })
+
+                    
+
+ let resetofsec=document.querySelector("#reset-second");
+  let resetofword=document.querySelector("#reset-word");
+
+resetofsec.addEventListener("click",()=>{
+    info.innerText="Your first selection:";
+    newword.innerHTML="";
+})
+resetofword.addEventListener("click",()=>{
+    info.innerText="Your second selection:";
+   count=-1;
+   yourword="your word is ";
+})
+
+back.addEventListener("click",()=>{
+    sec.classList.add("hide"); 
+    first.style.display="";
+    info.innerText="Your first selection:";
+    show.classList.add("hide");
+    resetofword.classList.add("hide");
+    resetofsec.classList.remove("hide");
+    back.classList.add("hide");
+    next.style.display="";
+    
+
+})
+
+let add=document.getElementById("add");
+
+let show=document.querySelector("#show-word");
+                    show.addEventListener("click",()=>{
+alert(`Your word is ${yourword}`);
+
+});
+
+
+
+
+
+</script>
+</body>
+</html>
