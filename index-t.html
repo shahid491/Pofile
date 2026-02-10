@@ -149,9 +149,10 @@ button:hover {
 
 <!-- Start Screen -->
 <div class="start-screen" id="startScreen">
-  <p>Who plays first?</p>
-  <button onclick="startGame('X')">Player X</button>
-  <button onclick="startGame('O')">Player O</button>
+  <p>Choose your symbol</p>
+<button onclick="startGame('X')">Play as X</button>
+<button onclick="startGame('O')">Play as O</button>
+
 </div>
 
 <!-- Game Area -->
@@ -187,7 +188,8 @@ button:hover {
 
 
 
-<script>const cells = document.querySelectorAll(".cell");
+<script>
+const cells = document.querySelectorAll(".cell");
 const statusText = document.querySelector(".status");
 const newGameBtn = document.getElementById("newGame");
 const resetScoreBtn = document.getElementById("resetScore");
@@ -199,6 +201,8 @@ const scoreXEl = document.getElementById("scoreX");
 const scoreOEl = document.getElementById("scoreO");
 const scoreDrawEl = document.getElementById("scoreDraw");
 
+let player = "X";
+let computer = "O";
 let currentPlayer = "X";
 let gameActive = false;
 let lastLoser = null;
@@ -213,66 +217,132 @@ const winPatterns = [
   [0,4,8],[2,4,6]
 ];
 
-function startGame(player) {
-  currentPlayer = player;
-  gameActive = true;
+// START GAME
+function startGame(choice) {
+  player = choice;
+  computer = choice === "X" ? "O" : "X";
+  currentPlayer = "X"; // X always starts
+
   startScreen.classList.add("hide");
   gameArea.classList.remove("hide");
+
   statusText.textContent = `Player ${currentPlayer}'s Turn`;
+  gameActive = true;
+
+  if (currentPlayer === computer) {
+    setTimeout(computerMove, 500);
+  }
 }
 
-cells.forEach((cell) => {
+// PLAYER MOVE
+cells.forEach((cell, index) => {
   cell.addEventListener("click", () => {
-    if (!gameActive || cell.textContent !== "") return;
+    if (!gameActive || cell.textContent !== "" || currentPlayer !== player) return;
 
-    cell.textContent = currentPlayer;
-    cell.classList.add(currentPlayer.toLowerCase());
+    makeMove(cell, player);
 
-    if (checkWinner()) {
-      statusText.textContent = `🎉 Player ${currentPlayer} Wins!`;
-      updateScore(currentPlayer);
-      lastLoser = currentPlayer === "X" ? "O" : "X";
-      endGame();
-      return;
-    }
+    if (checkGameEnd(player)) return;
 
-    if (isDraw()) {
-      statusText.textContent = "🤝 It's a Draw!";
-      scoreDraw++;
-      scoreDrawEl.textContent = scoreDraw;
-      lastLoser = currentPlayer === "X" ? "O" : "X";
-      endGame();
-      return;
-    }
-
-    currentPlayer = currentPlayer === "X" ? "O" : "X";
-    statusText.textContent = `Player ${currentPlayer}'s Turn`;
+    currentPlayer = computer;
+    statusText.textContent = "Computer's Turn";
+    setTimeout(computerMove, 500);
   });
 });
 
-function checkWinner() {
-  return winPatterns.some(pattern => {
-    const [a,b,c] = pattern;
-    if (
-      cells[a].textContent === currentPlayer &&
-      cells[b].textContent === currentPlayer &&
-      cells[c].textContent === currentPlayer
-    ) {
-      cells[a].classList.add("win");
-      cells[b].classList.add("win");
-      cells[c].classList.add("win");
-      return true;
+// COMPUTER MOVE
+function computerMove() {
+  if (!gameActive) return;
+
+  let move = findBestMove();
+  makeMove(cells[move], computer);
+
+  if (checkGameEnd(computer)) return;
+
+  currentPlayer = player;
+  statusText.textContent = `Player ${player}'s Turn`;
+}
+
+// PLACE SYMBOL
+function makeMove(cell, symbol) {
+  cell.textContent = symbol;
+  cell.classList.add(symbol.toLowerCase());
+}
+
+// SMART AI (Win → Block → Random)
+function findBestMove() {
+  // Try to win
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i].textContent === "") {
+      cells[i].textContent = computer;
+      if (checkWinner(computer)) {
+        cells[i].textContent = "";
+        return i;
+      }
+      cells[i].textContent = "";
     }
-    return false;
+  }
+
+  // Try to block player
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i].textContent === "") {
+      cells[i].textContent = player;
+      if (checkWinner(player)) {
+        cells[i].textContent = "";
+        return i;
+      }
+      cells[i].textContent = "";
+    }
+  }
+
+  // Random move
+  const emptyCells = [...cells]
+    .map((c, i) => c.textContent === "" ? i : null)
+    .filter(i => i !== null);
+
+  return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+}
+
+// CHECK WINNER
+function checkWinner(symbol) {
+  return winPatterns.some(pattern => {
+    return pattern.every(index => cells[index].textContent === symbol);
   });
 }
 
-function isDraw() {
-  return [...cells].every(cell => cell.textContent !== "");
+// CHECK GAME END
+function checkGameEnd(symbol) {
+  if (checkWinner(symbol)) {
+    highlightWin(symbol);
+    statusText.textContent =
+      symbol === player ? "🎉 You Win!" : "🤖 Computer Wins!";
+    updateScore(symbol);
+    lastLoser = symbol === "X" ? "O" : "X";
+    endGame();
+    return true;
+  }
+
+  if ([...cells].every(cell => cell.textContent !== "")) {
+    statusText.textContent = "🤝 It's a Draw!";
+    scoreDraw++;
+    scoreDrawEl.textContent = scoreDraw;
+    endGame();
+    return true;
+  }
+  return false;
 }
 
-function updateScore(player) {
-  if (player === "X") {
+// HIGHLIGHT WIN
+function highlightWin(symbol) {
+  winPatterns.forEach(pattern => {
+    if (pattern.every(i => cells[i].textContent === symbol)) {
+      pattern.forEach(i => cells[i].classList.add("win"));
+    }
+  });
+}
+
+// SCORE
+function updateScore(symbol) {
+  if (symbol === "X") {
     scoreX++;
     scoreXEl.textContent = scoreX;
   } else {
@@ -281,11 +351,13 @@ function updateScore(player) {
   }
 }
 
+// END GAME
 function endGame() {
   gameActive = false;
   newGameBtn.classList.remove("hide");
 }
 
+// RESET BOARD
 function resetBoard() {
   cells.forEach(cell => {
     cell.textContent = "";
@@ -296,8 +368,13 @@ function resetBoard() {
   statusText.textContent = `Player ${currentPlayer}'s Turn`;
   gameActive = true;
   newGameBtn.classList.add("hide");
+
+  if (currentPlayer === computer) {
+    setTimeout(computerMove, 500);
+  }
 }
 
+// RESET SCORES
 function resetScores() {
   scoreX = scoreO = scoreDraw = 0;
   scoreXEl.textContent = scoreOEl.textContent = scoreDrawEl.textContent = 0;
@@ -306,7 +383,7 @@ function resetScores() {
 
 newGameBtn.addEventListener("click", resetBoard);
 resetScoreBtn.addEventListener("click", resetScores);
-
 </script>
+
 </body>
 </html>
