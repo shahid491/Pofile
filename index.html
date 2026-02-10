@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Social Info</title>
+  <title>Shahid Nazir | Social Hub</title>
 
-  <!-- CSS -->
   <style>
     * {
       margin: 0;
@@ -15,21 +14,39 @@
     }
 
     body {
-      background: linear-gradient(135deg, #667eea, #764ba2);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      transition: background 0.6s ease;
       color: #fff;
+    }
+
+    .container {
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .card {
       background: rgba(0, 0, 0, 0.35);
-      padding: 30px;
-      border-radius: 15px;
-      width: 320px;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      animation: fadeUp 0.7s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Profile Card */
+    .profile {
       text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
 
     .profile-img {
@@ -38,7 +55,12 @@
       border-radius: 50%;
       border: 3px solid #fff;
       object-fit: cover;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
+      transition: transform 0.4s ease;
+    }
+
+    .profile-img:hover {
+      transform: scale(1.08) rotate(3deg);
     }
 
     h1 {
@@ -49,96 +71,128 @@
     p {
       font-size: 14px;
       opacity: 0.9;
-      margin-bottom: 20px;
     }
 
-    .social-links a {
-      display: block;
+    /* Section Title */
+    .section-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+
+    /* Social Cards */
+    .social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .social-card {
+      padding: 14px;
+      border-radius: 12px;
+      text-align: center;
       text-decoration: none;
       color: #fff;
-      background: rgba(255, 255, 255, 0.15);
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 8px;
-      transition: background 0.3s, transform 0.2s;
-    }
-
-    .social-links a:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 6px;
-      background: #ffdd57;
-      cursor: pointer;
       font-weight: bold;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .social-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+
+    .instagram { background: linear-gradient(135deg, #fd1d1d, #833ab4); }
+    .whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); }
+
+    /* Games Card */
+    .game-card {
+      background: linear-gradient(135deg, #ffdd57, #ff9f1c);
+      color: #000;
+      text-decoration: none;
+      padding: 18px;
+      border-radius: 14px;
+      display: block;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .game-card:hover {
+      transform: scale(1.06);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    }
+
+    .game-card span {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    /* Button */
+    button {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      background: #fff;
+      color: #333;
+      transition: transform 0.2s, background 0.3s;
     }
 
     button:hover {
-      background: #ffd000;
+      transform: scale(1.05);
+      background: #ffdd57;
     }
-    .project-card a {
-  background: linear-gradient(135deg, #ffdd57, #ff9f1c);
-  color: #000;
-  font-weight: bold;
-}
-
-.project-card a:hover {
-  transform: scale(1.08);
-  background: linear-gradient(135deg, #ffe066, #ffb703);
-}
 
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <img src="ss.jpg" alt="Profile Photo" class="profile-img" />
+  <div class="container">
 
-    <h1 id="name">SHAHID NAZIR</h1>
-    <p id="bio"> Student at GDC baramulla </p>
-
-    <div class="social-links">
-      <a href="https://www.instagram.com/shahid._.019?igsh=NzkzMG1scHlwOTMy&utm_source=qr" id="instagram" target="_blank">Instagram</a>
-      <a href="https://api.whatsapp.com/qr/XTBO4C3H6XP6E1?autoload=1&app_absent=0" id="whatsapp" target="_blank">Whatsapp</a>
-     
-
+    <!-- Profile Card -->
+    <div class="card profile">
+      <img src="ss.jpg" alt="Profile Photo" class="profile-img">
+      <h1>SHAHID NAZIR</h1>
+      <p>Student at GDC Baramulla</p>
     </div>
 
-    <div class="social-links project-card">
-  <a href="index-t.html" target="_blank">
-    🎮 Tic Tac Toe Game
-    <br>
-    <small>Click to play</small>
-  </a>
-</div>
+    <!-- Social Links Card -->
+    <div class="card">
+      <div class="section-title">🌐 Social Profiles</div>
+      <div class="social-grid">
+        <a class="social-card instagram" target="_blank"
+           href="https://www.instagram.com/shahid._.019">
+          Instagram
+        </a>
+        <a class="social-card whatsapp" target="_blank"
+           href="https://api.whatsapp.com/qr/XTBO4C3H6XP6E1">
+          WhatsApp
+        </a>
+      </div>
+    </div>
 
+    <!-- Games Card -->
+    <div class="card">
+      <div class="section-title">🎮 My Games</div>
+      <a href="index-t.html" target="_blank" class="game-card">
+        Tic Tac Toe  
+        <br>
+        <span>Click to play</span>
+      </a>
+    </div>
 
-    <button onclick="changeTheme()">Change Theme</button>
+    <!-- Theme Button -->
+    <button onclick="changeTheme()">🎨 Change Theme</button>
+
   </div>
 
-  <!-- JavaScript -->
   <script>
-    // Update your social links here
-    document.getElementById("instagram").href = "https://www.instagram.com/shahid._.019?igsh=NzkzMG1scHlwOTMy&utm_source=qr";
-    document.getElementById("whatsapp").href = "https://api.whatsapp.com/qr/XTBO4C3H6XP6E1?autoload=1&app_absent=0";
-   
-    
-
-    // Theme changer
     let dark = true;
     function changeTheme() {
-      if (dark) {
-        document.body.style.background =
-          "linear-gradient(135deg, #ff9a9e, #fad0c4)";
-      } else {
-        document.body.style.background =
-          "linear-gradient(135deg, #667eea, #764ba2)";
-      }
+      document.body.style.background = dark
+        ? "linear-gradient(135deg, #ff9a9e, #fad0c4)"
+        : "linear-gradient(135deg, #667eea, #764ba2)";
       dark = !dark;
     }
   </script>
